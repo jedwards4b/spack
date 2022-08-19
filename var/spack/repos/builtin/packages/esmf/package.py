@@ -19,7 +19,7 @@ class Esmf(MakefilePackage):
     url = "https://github.com/esmf-org/esmf/archive/ESMF_8_0_1.tar.gz"
     git = "https://github.com/esmf-org/esmf.git"
 
-    maintainers = ["climbfuji"]
+    maintainers = ["climbfuji", "jedwards4b"]
 
     # Develop is a special name for spack and is always considered the newest version
     version("develop", branch="develop")
@@ -58,6 +58,7 @@ class Esmf(MakefilePackage):
     variant("netcdf", default=True, description="Build with NetCDF support")
     variant("pnetcdf", default=True, description="Build with pNetCDF support")
     variant("xerces", default=True, description="Build with Xerces support")
+
     variant(
         "parallelio",
         default=True,
@@ -65,10 +66,22 @@ class Esmf(MakefilePackage):
         when="@8.3:",
     )
     variant(
+        "parallelio",
+        default=False,
+        description="Build with external parallelio library",
+        when="@8.3.b09",
+    )
+    variant(
         "pio",
         default=True,
         description="Enable Internal ParallelIO support",
         when="@:8.2.99",
+    )
+    variant(
+        "pio",
+        default=True,
+        description="Enable Internal ParallelIO support",
+        when="@8.3.0b09",
     )
     variant("debug", default=False, description="Make a debuggable version of the library")
 
