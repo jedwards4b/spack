@@ -47,10 +47,8 @@ class Parallelio(CMakePackage):
         define = self.define
         define_from_variant = self.define_from_variant
         spec = self.spec
-        if "mpi" in spec:
-            env["CC"] = spec["mpi"].mpicc
-            env["FC"] = spec["mpi"].mpifc
         src = self.stage.source_path
+
         args = [
             define("NetCDF_C_PATH", spec["netcdf-c"].prefix),
             define("USER_CMAKE_MODULE_PATH", join_path(src, "cmake")),
@@ -67,10 +65,13 @@ class Parallelio(CMakePackage):
         if spec.satisfies("+fortran"):
             args.extend(
                 [
-                    define("NetCDF_Fortran_PATH", spec["netcdf-c"].prefix),
+                    define("NetCDF_Fortran_PATH", spec["netcdf-fortran"].prefix),
                 ]
             )
-        if not spec.satisfies("+mpi"):
+        if spec.satisfies("+mpi"):
+            env["CC"] = spec["mpi"].mpicc
+            env["FC"] = spec["mpi"].mpifc
+        else:
             args.extend(
                 [
                     define("PIO_ENABLE_MPISERIAL", True),
