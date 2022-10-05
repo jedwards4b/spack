@@ -294,7 +294,7 @@ class LmodFileLayout(BaseFileLayout):
         # among flavors of the same library (e.g. openblas~openmp vs.
         # openblas+openmp)
         path = path_part_fmt.format(token=value)
-        path = "-".join([path, value.dag_hash(length=7)])
+        #path = "-".join([path, value.dag_hash(length=7)])
         return path
 
     @property

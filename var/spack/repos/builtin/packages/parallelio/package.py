@@ -29,14 +29,17 @@ class Parallelio(CMakePackage):
     variant(
         "fortran", default=True, description="enable fortran interface (requires netcdf fortran)"
     )
-
-    depends_on("mpi")
-    depends_on("netcdf-c +mpi", type="link")
+    variant("mpi", default=True, description="Use mpi to build, otherwise use mpi-serial")
+    
+    depends_on("mpi", when="+mpi")
+    depends_on("mpi-serial", when="-mpi")
+    depends_on("netcdf-c +mpi", type="link", when="+mpi")
+    depends_on("netcdf-c -mpi", type="link", when="-mpi")
     depends_on("netcdf-fortran", type="link", when="+fortran")
     depends_on("parallel-netcdf", type="link", when="+pnetcdf")
 
     # Allow argument mismatch in gfortran versions > 10 for mpi library compatibility
-    patch("gfortran.patch", when="+fortran %gcc@10:")
+    patch("gfortran.patch", when="@:2.5.8 +fortran %gcc@10:")
 
     resource(name="genf90", git="https://github.com/PARALLELIO/genf90.git", tag="genf90_200608")
 
@@ -44,8 +47,9 @@ class Parallelio(CMakePackage):
         define = self.define
         define_from_variant = self.define_from_variant
         spec = self.spec
-        env["CC"] = spec["mpi"].mpicc
-        env["FC"] = spec["mpi"].mpifc
+        if "mpi" in spec:
+            env["CC"] = spec["mpi"].mpicc
+            env["FC"] = spec["mpi"].mpifc
         src = self.stage.source_path
         args = [
             define("NetCDF_C_PATH", spec["netcdf-c"].prefix),
@@ -63,10 +67,15 @@ class Parallelio(CMakePackage):
         if spec.satisfies("+fortran"):
             args.extend(
                 [
-                    define("NetCDF_Fortran_PATH", spec["netcdf-fortran"].prefix),
+                    define("NetCDF_Fortran_PATH", spec["netcdf-c"].prefix),
                 ]
             )
-
+        if not spec.satisfies("+mpi"):
+            args.extend(
+                [
+                    define("PIO_ENABLE_MPISERIAL", True),
+                ]
+            )
         args.extend(
             [
                 define_from_variant("PIO_ENABLE_TIMING", "timing"),
