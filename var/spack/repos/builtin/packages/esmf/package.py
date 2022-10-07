@@ -56,7 +56,7 @@ class Esmf(MakefilePackage):
         description="Build with external LAPACK support",
     )
     variant("netcdf", default=True, description="Build with NetCDF support")
-    variant("pnetcdf", default=True, description="Build with pNetCDF support")
+    variant("pnetcdf", default=True, description="Build with pNetCDF support", when="+mpi")
     variant("xerces", default=True, description="Build with Xerces support")
     variant(
         "parallelio",
@@ -111,7 +111,7 @@ class Esmf(MakefilePackage):
     patch("mvapich2.patch", when="@:7.0")
 
     # explicit type cast of variables from long to int
-    patch("cce.patch", when="@:8.4.0 %cce@13.99:")
+    patch("cce.patch", when="@:8.3 %cce@14:")
 
     # Allow different directories for creation and
     # installation of dynamic libraries on OSX:
@@ -194,7 +194,7 @@ class Esmf(MakefilePackage):
                     "."
                 )[0]
             )
-        elif self.compiler.name == "intel":
+        elif self.compiler.name == "intel" or self.compiler.name == 'oneapi':
             os.environ["ESMF_COMPILER"] = "intel"
         elif self.compiler.name in ["clang", "apple-clang"]:
             os.environ["ESMF_COMPILER"] = "gfortranclang"
@@ -205,7 +205,7 @@ class Esmf(MakefilePackage):
             )
         elif self.compiler.name == "nag":
             os.environ["ESMF_COMPILER"] = "nag"
-        elif self.compiler.name == "pgi":
+        elif self.compiler.name == "pgi" or self.compiler.name == 'nvhpc':
             os.environ["ESMF_COMPILER"] = "pgi"
         elif self.compiler.name == "cce":
             os.environ["ESMF_COMPILER"] = "cce"

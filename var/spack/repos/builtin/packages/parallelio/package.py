@@ -30,7 +30,7 @@ class Parallelio(CMakePackage):
         "fortran", default=True, description="enable fortran interface (requires netcdf fortran)"
     )
     variant("mpi", default=True, description="Use mpi to build, otherwise use mpi-serial")
-    
+
     depends_on("mpi", when="+mpi")
     depends_on("mpi-serial", when="-mpi")
     depends_on("netcdf-c +mpi", type="link", when="+mpi")
@@ -72,9 +72,12 @@ class Parallelio(CMakePackage):
             env["CC"] = spec["mpi"].mpicc
             env["FC"] = spec["mpi"].mpifc
         else:
+            env["FFLAGS"] = "-DNO_MPIMOD"
             args.extend(
                 [
-                    define("PIO_ENABLE_MPISERIAL", True),
+                    define("PIO_USE_MPISERIAL", True),
+                    define("MPISERIAL_PATH", spec["mpi-serial"].prefix),
+                    define("PIO_ENABLE_TESTS", False),
                 ]
             )
         args.extend(
@@ -90,3 +93,12 @@ class Parallelio(CMakePackage):
         return "https://github.com/NCAR/ParallelIO/archive/pio{0}.tar.gz".format(
             version.underscored
         )
+
+    def setup_run_environment(self, env):
+        env.set("PIO_VERSION_MAJOR", "2")
+        valid_values = "netcdf"
+        if self.spec.satisfies("+mpi"):
+            valid_values += ",netcdf4p,netcdf4c"
+            if self.spec.satisfies("+pnetcdf"):
+                valid_values += ",pnetcdf"
+        env.set("PIO_TYPENAME_VALID_VALUES",valid_values)
