@@ -41,6 +41,8 @@ class MpiSerial(AutotoolsPackage):
             description='Specify the size of Fortran double precision variables')
 
     patch('install.patch')
+
+    provides('mpi')
     
     def configure_args(self):
         args = []

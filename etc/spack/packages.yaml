@@ -1,0 +1,153 @@
+packages:
+  cray-libsci:
+    externals:
+    - spec: cray-libsci@22.08.1.1
+      modules:
+      - cray-libsci/22.08.1.1
+    buildable: false
+  netcdf-c:
+    externals:
+    - spec: netcdf-c@4.8.1+mpi
+      module: netcdf/4.8.1
+#    - spec: netcdf-c@4.8.1+mpi%intel
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/intel/2022.1.0/cray-mpich/8.1.18
+#    - spec: netcdf-c@4.8.1%intel
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/intel/2022.1.0
+#    - spec: netcdf-c@4.8.1+mpi%oneapi
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/oneapi/2022.1.0/cray-mpich/8.1.18
+#    - spec: netcdf-c@4.8.1%oneapi
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/oneapi/2022.1.0
+#    - spec: netcdf-c@4.8.1+mpi%cce
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/cce/14.0.2/cray-mpich/8.1.18
+#    - spec: netcdf-c@4.8.1%cce
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/cce/14.0.2/
+#    - spec: netcdf-c@4.8.1+mpi%gcc
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/gcc/11.2.0/cray-mpich/8.1.18
+#    - spec: netcdf-c@4.8.1%gcc
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/gcc/11.2.0/
+#    - spec: netcdf-c@4.8.1+mpi%nvhpc
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/nvhpc/22.7/cray-mpich/8.1.18
+#    - spec: netcdf-c@4.8.1%nvhpc
+#      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/netcdf/4.8.1/nvhpc/22.7/
+    buildable: false
+#  netcdf-fortran:
+#    # netcdf-fortran is collocated with netcdf-c
+#    buildable: false
+  parallel-netcdf:
+    externals:
+    - spec: parallel-netcdf@1.12.2%intel
+      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/parallel-netcdf/1.12.2/intel/2022.1.0/cray-mpich/8.1.18
+    - spec: parallel-netcdf@1.12.2%gcc
+      prefix: /glade/u/apps/gust/22.08b/spack/opt/spack/parallel-netcdf/1.12.2/gcc/11.2.0/cray-mpich/8.1.18
+    buildable: false
+  cmake:
+    externals:
+    - spec: cmake@3.23.2
+      prefix: /glade/u/apps/common/22.08/spack/opt/spack/cmake/3.23.2/gcc/7.5.0
+    buildable: false
+  cray-mpich:
+    externals:
+    - spec: cray-mpich@8.1.18
+      modules:
+      - cray-mpich/8.1.18
+    buildable: false
+  openssl:
+    externals:
+    - spec: openssl@1.1.1d
+      prefix: /usr
+  binutils:
+    externals:
+    - spec: binutils@2.37.20211103
+      prefix: /usr
+  diffutils:
+    externals:
+    - spec: diffutils@3.6
+      prefix: /usr
+  flex:
+    externals:
+    - spec: flex@2.6.4+lex
+      prefix: /usr
+  git:
+    externals:
+    - spec: git@2.31.1+tcltk
+      prefix: /usr
+  groff:
+    externals:
+    - spec: groff@1.22.3
+      prefix: /usr
+  findutils:
+    externals:
+    - spec: findutils@4.8.0
+      prefix: /usr
+  openssh:
+    externals:
+    - spec: openssh@8.4p1
+      prefix: /usr
+  bison:
+    externals:
+    - spec: bison@3.0.4
+      prefix: /usr
+  pkg-config:
+    externals:
+    - spec: pkg-config@0.29.2
+      prefix: /usr
+  subversion:
+    externals:
+    - spec: subversion@1.10.6
+      prefix: /usr
+  tar:
+    externals:
+    - spec: tar@1.30
+      prefix: /usr
+  cvs:
+    externals:
+    - spec: cvs@1.12.12
+      prefix: /usr
+  gawk:
+    externals:
+    - spec: gawk@4.2.1
+      prefix: /usr
+  automake:
+    externals:
+    - spec: automake@1.15.1
+      prefix: /usr
+  m4:
+    externals:
+    - spec: m4@1.4.18
+      prefix: /usr
+  gmake:
+    externals:
+    - spec: gmake@4.2.1
+      prefix: /usr
+  libxml2:
+    externals:
+    - spec: libxml2@2.9.13
+      prefix: /glade/u/apps/common/22.08/spack/opt/spack/libxml2/2.9.13/gcc/7.5.0
+    buildable: false
+  libtool:
+    externals:
+    - spec: libtool@2.4.6
+      prefix: /usr
+  curl:
+    externals:
+    - spec: curl@7.66.0+gssapi+ldap+nghttp2
+      prefix: /usr
+  autoconf:
+    externals:
+    - spec: autoconf@2.69
+      prefix: /usr
+  texinfo:
+    externals:
+    - spec: texinfo@6.5
+      prefix: /usr
+  zlib:
+    externals:
+    - spec: zlib@1.2.12
+      prefix: /glade/u/apps/common/22.08/spack/opt/spack/zlib/1.2.12/gcc/7.5.0
+    buildable: false
+  all:
+    compiler: [intel@2022.1.0, cce@14.0.2, gcc@11.2.0, nvhpc@22.7, oneapi@2022.1.0]
+    providers:
+      blas: [cray-libsci]
+      lapack: [cray-libsci]
+      mpi: [cray-mpich@8.1.18]

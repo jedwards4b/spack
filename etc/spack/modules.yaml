@@ -1,0 +1,37 @@
+modules:
+  prefix_inspections:
+    bin:
+    - PATH
+    lib:
+    - NCAR_LDFLAGS_{name}
+    lib64:
+    - NCAR_LDFLAGS_{name}64
+    include:
+    - NCAR_INC_{name}
+    man:
+    - MANPATH
+    share/man:
+    - MANPATH
+    lib/pkgconfig:
+    - PKG_CONFIG_PATH
+    lib64/pkgconfig:
+    - PKG_CONFIG_PATH
+  default:
+    enable:
+      - lmod
+    roots:
+      lmod: /glade/u/apps/cseg/modules
+    arch_folder: false
+    lmod:
+      hierarchy:
+        - mpi
+      blacklist_implicits: true
+      hash_length: 0
+      core_compilers:
+        - None
+      projections:
+        all: '{name}/{version}'
+        esmf+debug: '{name}/{version}-debug'
+        #esmf~mpi: 'mpi-serial/2.3.0/{compiler.name}/{compiler.version}/{name}/{version}'
+        parallelio+debug: '{name}/{version}-debug'
+        #parallelio~mpi: 'mpi-serial/2.3.0/parallelio/{version}'

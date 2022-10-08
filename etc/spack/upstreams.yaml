@@ -1,0 +1,3 @@
+upstreams:
+  spack-upstream:
+    install_tree: /glade/u/apps/gust/default/spack/opt/spack
