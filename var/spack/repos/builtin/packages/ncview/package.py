@@ -5,7 +5,6 @@
 
 from spack.package import *
 
-
 class Ncview(AutotoolsPackage):
     """Simple viewer for NetCDF files."""
 
@@ -19,6 +18,15 @@ class Ncview(AutotoolsPackage):
     depends_on("udunits")
     depends_on("libpng")
     depends_on("libxaw")
+
+    def patch(self):
+        """Force ncview to trust Spack's relocation of compilers"""
+        my_cc = self.compiler.cc
+
+        filter_file(r'^CC_TEST_SAME=\$CC', 'CC_TEST_NAME="%s"' % my_cc,
+                "configure")
+        filter_file(r'^NETCDF_CC_TEST_SAME=\$NETCDF_CC', 'NETCDF_CC_TEST_NAME="%s"' % my_cc,
+                "configure")
 
     def configure_args(self):
         spec = self.spec
