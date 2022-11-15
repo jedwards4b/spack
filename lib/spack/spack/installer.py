@@ -2,7 +2,6 @@
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
-
 """
 This module encapsulates package installation functionality.
 
@@ -30,14 +29,13 @@ installations of packages in a Spack instance.
 import copy
 import glob
 import heapq
+import io
 import itertools
 import os
 import shutil
 import sys
 import time
 from collections import defaultdict
-
-import six
 
 import llnl.util.filesystem as fs
 import llnl.util.lock as lk
@@ -594,7 +592,7 @@ def log(pkg):
 
     # Finally, archive files that are specific to each package
     with fs.working_dir(pkg.stage.path):
-        errors = six.StringIO()
+        errors = io.StringIO()
         target_dir = os.path.join(spack.store.layout.metadata_path(pkg.spec), "archived-files")
 
         for glob_expr in pkg.builder.archive_files:
@@ -803,8 +801,34 @@ class PackageInstaller(object):
         """
         packages = _packages_needed_to_bootstrap_compiler(compiler, architecture, pkgs)
         for (comp_pkg, is_compiler) in packages:
-            if package_id(comp_pkg) not in self.build_tasks:
+            pkgid = package_id(comp_pkg)
+            if pkgid not in self.build_tasks:
                 self._add_init_task(comp_pkg, request, is_compiler, all_deps)
+            elif is_compiler:
+                # ensure it's queued as a compiler
+                self._modify_existing_task(pkgid, "compiler", True)
+
+    def _modify_existing_task(self, pkgid, attr, value):
+        """
+        Update a task in-place to modify its behavior.
+
+        Currently used to update the ``compiler`` field on tasks
+        that were originally created as a dependency of a compiler,
+        but are compilers in their own right.
+
+        For example, ``intel-oneapi-compilers-classic`` depends on
+        ``intel-oneapi-compilers``, which can cause the latter to be
+        queued first as a non-compiler, and only later as a compiler.
+        """
+        for i, tup in enumerate(self.build_pq):
+            key, task = tup
+            if task.pkg_id == pkgid:
+                tty.debug(
+                    "Modifying task for {0} to treat it as a compiler".format(pkgid),
+                    level=2,
+                )
+                setattr(task, attr, value)
+                self.build_pq[i] = (key, task)
 
     def _add_init_task(self, pkg, request, is_compiler, all_deps):
         """
@@ -1215,6 +1239,12 @@ class PackageInstaller(object):
         fail_fast = request.install_args.get("fail_fast")
         self.fail_fast = self.fail_fast or fail_fast
 
+    def _add_compiler_package_to_config(self, pkg):
+        compiler_search_prefix = getattr(pkg, "compiler_search_prefix", pkg.spec.prefix)
+        spack.compilers.add_compilers_to_config(
+            spack.compilers.find_compilers([compiler_search_prefix])
+        )
+
     def _install_task(self, task):
         """
         Perform the installation of the requested spec and/or dependency
@@ -1240,9 +1270,7 @@ class PackageInstaller(object):
         if use_cache and _install_from_cache(pkg, cache_only, explicit, unsigned):
             self._update_installed(task)
             if task.compiler:
-                spack.compilers.add_compilers_to_config(
-                    spack.compilers.find_compilers([pkg.spec.prefix])
-                )
+                self._add_compiler_package_to_config(pkg)
             return
 
         pkg.run_tests = tests is True or tests and pkg.name in tests
@@ -1270,9 +1298,7 @@ class PackageInstaller(object):
 
             # If a compiler, ensure it is added to the configuration
             if task.compiler:
-                spack.compilers.add_compilers_to_config(
-                    spack.compilers.find_compilers([pkg.spec.prefix])
-                )
+                self._add_compiler_package_to_config(pkg)
         except spack.build_environment.StopPhase as e:
             # A StopPhase exception means that do_install was asked to
             # stop early from clients, and is not an error at this point
@@ -1691,9 +1717,7 @@ class PackageInstaller(object):
 
                     # It's an already installed compiler, add it to the config
                     if task.compiler:
-                        spack.compilers.add_compilers_to_config(
-                            spack.compilers.find_compilers([pkg.spec.prefix])
-                        )
+                        self._add_compiler_package_to_config(pkg)
 
                 else:
                     # At this point we've failed to get a write or a read
@@ -1746,6 +1770,16 @@ class PackageInstaller(object):
                 tty.error(err.format(pkg.name, exc.__class__.__name__, str(exc)))
                 spack.hooks.on_install_cancel(task.request.pkg.spec)
                 raise
+
+            except binary_distribution.NoChecksumException as exc:
+                if not task.cache_only:
+                    # Checking hash on downloaded binary failed.
+                    err = "Failed to install {0} from binary cache due to {1}:"
+                    err += " Requeueing to install from source."
+                    tty.error(err.format(pkg.name, str(exc)))
+                    task.use_cache = False
+                    self._requeue_task(task)
+                    continue
 
             except (Exception, SystemExit) as exc:
                 self._update_failed(task, True, exc)
