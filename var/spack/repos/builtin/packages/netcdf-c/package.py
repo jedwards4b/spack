@@ -98,6 +98,10 @@ class NetcdfC(AutotoolsPackage):
     depends_on("curl@7.18.0:", when="+dap")
     # depends_on("curl@7.18.0:", when='+cdmremote')
 
+    # Need to find libxml2 when using DAP in 4.9.0 (and newer?)
+    # https://github.com/Unidata/netcdf-c/issues/2410
+    depends_on("libxml2", when="@4.9.0:+dap")
+    
     depends_on("parallel-netcdf", when="+parallel-netcdf")
 
     # We need to build with MPI wrappers if any of the two
