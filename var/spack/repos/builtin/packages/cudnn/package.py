@@ -9,6 +9,15 @@ import platform
 from spack.package import *
 
 _versions = {
+    # cuDNN 8.5.0
+    "8.5.0.96-11.7": {
+        "Linux-x86_64": "5454a6fd94f008728caae9adad993c4e85ef36302e26bce43bea7d458a5e7b6d",
+        "Linux-ppc64le": "7ef72353331cf42b357f53cb4a4971fb07e2f0b2ae66e03d54933df52de411c8",
+        "Linux-aarch64": "3972ab37b6f0271274931f69c5675c3b61d16f8f5a2dedd422a5efd7b0f358e5",
+    },
+    "8.5.0.96-10.2": {
+        "Linux-x86_64": "14c5e3ca4258271996d1fd959c42d17c582ce4d9aff451f84524469e784fd154"
+    },
     # cuDNN 8.4.0
     "8.4.0.27-11.6": {
         "Linux-x86_64": "d19bdafd9800c79d29e6f6fffa9f9e2c10d1132d6c2ff10b1593e057e74dd050",
@@ -281,6 +290,11 @@ class Cudnn(Package):
             ver = version[:4]
             cuda = version[4:]
             directory = "{0}/local_installers/{1}".format(directory, cuda)
+
+            # NOTE: starting with 8.5.0 NVIDIA no longer uses the full CUDA
+            # version in the tarball
+            if version >= Version("8.5.0"):
+                cuda = cuda[0]
         elif version >= Version("7.2"):
             directory = version[:3]
             ver = version[:4]
