@@ -298,7 +298,7 @@ class Ncl(Package):
             hdf4 = self.spec["hdf"]
 
             if "+external-xdr" in hdf4 and hdf4["rpc"].name != "libc":
-                filter_file('(#define HDFlib.*)',r'\1 -ltirpc','config/Site.local')
+                filter_file("(#define HDFlib.*)", r"\1 {}".format(hdf4["rpc"].libs.link_flags), "config/Site.local")
 
     def prepare_src_tree(self):
         if "+triangle" in self.spec:
