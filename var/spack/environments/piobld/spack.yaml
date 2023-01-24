@@ -1,0 +1,13 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs:
+  - matrix:
+    - [parallelio@2.5.10~pnetcdf~mpi ^netcdf-c~mpi]
+    - ['%intel@20.0.1', '%gcc@9.3.0', '%nag@7.0']
+  view: false
+  concretizer:
+    unify: false

@@ -83,6 +83,8 @@ class NetcdfFortran(AutotoolsPackage):
                 # The following flag forces the compiler to produce module
                 # files with lowercase names.
                 flags.append("-ef")
+            elif self.compiler.name == "nag":
+                flags.append(" -f2003 -mismatch_all")
 
         # Note that cflags and fflags should be added by the compiler wrapper
         # and not on the command line to avoid overriding the default

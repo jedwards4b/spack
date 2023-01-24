@@ -1,0 +1,10 @@
+# This is a Spack Environment file.
+#
+# It describes a set of packages to be installed, along with
+# configuration settings.
+spack:
+  # add package specs to the `specs` list
+  specs: [esmf@8.4.1b02+parallelio~pnetcdf~xerces%nag]
+  view: false
+  concretizer:
+    unify: false

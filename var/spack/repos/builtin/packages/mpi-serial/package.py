@@ -51,4 +51,15 @@ class MpiSerial(AutotoolsPackage):
                     "--enable-fort-double={0}".format(doublesize),
                 ]
             )
+
         return args
+
+    def flag_handler(self, name, flags):
+        if name == 'fflags':
+            if self.spec.compiler.name == "nag":
+                flags.append("-pic")
+            else:
+                flags.append("-fPIC")
+        if name == "cflags":
+            flags.append("-fPIC")
+        return (flags, None, None)
