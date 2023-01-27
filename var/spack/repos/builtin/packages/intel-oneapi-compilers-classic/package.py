@@ -1,4 +1,4 @@
-# Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2023 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -33,6 +33,7 @@ class IntelOneapiCompilersClassic(Package):
         "2021.6.0": "2022.1.0",
         "2021.7.0": "2022.2.0",
         "2021.7.1": "2022.2.1",
+        "2021.8.0": "2023.0.0",
     }.items():
         version(ver)
         depends_on("intel-oneapi-compilers@" + oneapi_ver, when="@" + ver, type="run")
