@@ -24,6 +24,7 @@ class Podman(Package):
     depends_on("go", type="build")
     depends_on("go-md2man", type="build")
     depends_on("pkgconfig", type="build")
+    depends_on("py-sphinx", type="build")
     depends_on("cni-plugins", type="run")
     depends_on("conmon", type="run")
     depends_on("runc", type="run")
