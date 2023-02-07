@@ -13,7 +13,7 @@ class Squashfuse(AutotoolsPackage):
     url = "https://github.com/vasi/squashfuse/archive/refs/tags/0.1.105.tar.gz"
     git = "https://github.com/vasi/squashfuse.git"
 
-    maintainers = ["haampie"]
+    maintainers("haampie")
 
     version("master", branch="master")
     version("0.1.105", sha256="3f776892ab2044ecca417be348e482fee2839db75e35d165b53737cb8153ab1e")
