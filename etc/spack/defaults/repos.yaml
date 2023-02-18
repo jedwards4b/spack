@@ -12,3 +12,4 @@
 # -------------------------------------------------------------------------
 repos:
   - $spack/var/spack/repos/builtin
+  - /glade/u/apps/gust/$NCAR_ENV_VERSION/spack/var/spack/repos/builtin
