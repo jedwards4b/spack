@@ -36,19 +36,14 @@ class MpiSerial(AutotoolsPackage):
     provides("mpi")
 
     def configure_args(self):
-        args = ['CFLAGS={0}'.format(self.compiler.cc_pic_flag)]
+        #args = ["CFLAGS={0} -std=c89".format(self.compiler.cc_pic_flag)]
+        args = ["CFLAGS={0}".format(self.compiler.cc_pic_flag)]
+        args.extend(["FCFLAGS={0}".format(self.compiler.fc_pic_flag)])
+
         realsize = int(self.spec.variants["fort-real-size"].value)
         if realsize != 4:
-            args.extend(
-                [
-                    "--enable-fort-real={0}".format(realsize),
-                ]
-            )
+            args.extend(["--enable-fort-real={0}".format(realsize)])
         doublesize = int(self.spec.variants["fort-double-size"].value)
         if doublesize != 8:
-            args.extend(
-                [
-                    "--enable-fort-double={0}".format(doublesize),
-                ]
-            )
+            args.extend(["--enable-fort-double={0}".format(doublesize)])
         return args
