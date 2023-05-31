@@ -39,7 +39,7 @@ modules:
     # Where to install modules
     roots:
      tcl:    $spack/share/spack/modules
-     lmod:   $spack/share/spack/lmod
+     lmod:   /glade/u/apps/cseg/modules/$NCAR_ENV_VERSION
     # What type of modules to use
     enable:
       - tcl
